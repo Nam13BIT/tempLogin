@@ -1,7 +1,11 @@
+import { browser } from "protractor";
+
+require('module-alias/register');
 exports.config = {
     framework: 'jasmine',
     directConnect: true,
     baseUrl: 'http://192.168.171.191:4200/#/login',
+    seleniumAddress: 'http://localhost:4444/wd/hub',
   
     // Capabilities to be passed to the webdriver instance.
     capabilities: {
@@ -12,9 +16,12 @@ exports.config = {
     // include glob patterns.
     //specs: ["../build/testcases/TC_LI001.js"],
     suites: {
-        TC1: ["../build/testcases/TC_LI001.js"],
-        TC3: ["../build/testcases/TC_LI003.js"],
-        TC4: ["../build/testcases/TC_LI004.js"],
-        TC5: ["../build/testcases/TC_LI005.js"]
+        TC1: ["../build/test-cases/TC_LI001.js"],
+        
       },
+      onPrepare: () => {
+        browser.manage().window().maximize();
+        browser.manage().timeouts().implicitlyWait(5000);
+
+    }
 };  

@@ -1,37 +1,51 @@
 import { browser, by, element, ElementFinder } from 'protractor';
 import { timeout } from 'q';
-export class LoginPage {
-    private nameInput = element(by.xpath("//input[@id='Username']"));
-    private passwordInput = element(by.xpath("//input[@id='Password']"));
-    private loginTitle = element(by.xpath("//span[@class='align-middle']"));
-    private loginButton = element(by.xpath("//button[@id='logIn']"));
-    private registerButton = element(by.xpath("//button[contains(text(),'Don't have an account? Click here.')]"));
+import ElementWrapper from '@utilities/protractor-wrappers/elements';
+import ManagementTest from './management-test-page';
 
-    async getBrowser() {
-        await browser.get('http://192.168.171.191:4200/#/login');
+export default class LoginPage {
+    private static _loginPage: LoginPage;
+
+    protected usernameInput = new ElementWrapper(by.xpath("//input[@id='Username']"));
+    protected passwordInput = new ElementWrapper(by.xpath("//input[@id='Password']"));
+    protected loginTitle = new ElementWrapper(by.xpath("//span[@class='align-middle']"));
+    protected loginButton = new ElementWrapper(by.xpath("//button[@id='logIn']"));
+    protected registerButton = new ElementWrapper(by.xpath("//button[contains(text(),'Don't have an account? Click here.')]"));
+    protected loadingScreen = new ElementWrapper(by.xpath(`//*[@id="loading-screen-container"]`));
+    
+    public static getInstance(): LoginPage {
+        this._loginPage = new LoginPage();
+        return this._loginPage;
     }
 
 
-    setName = async (name) => {
-        await this.nameInput.sendKeys(name);
-    };
-
-    setPassword = async (password) => {
-        await this.passwordInput.sendKeys(password,10);
-    };
-
-    getLoginTittle = async () => {
+    public async inputLoginForm(name:string, pass : string): Promise<void> {
+        try {
+            await this.usernameInput.input(name,5);
+            await this.passwordInput.input(pass,5);
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    public async getLoginTittle(){
         return this.loginTitle.getText();
-    };
-
-    submitLogin = async () => {
-        await this.loginButton.click();
     }
-    clearUsername = async() =>{
-         await this.nameInput.clear();
-    };
-    clearPassword = async() =>{
-        await this.passwordInput.clear();
-   };
+    public async submitLoginForm(name:string, pass :string): Promise<ManagementTest>{
+        try {
+            await this.inputLoginForm(name,pass);
+            await this.loginButton.singleLeftClick();
+            await this.loadingScreen.waitForVisible();
+            await this.loadingScreen.waitForInvisible();
+            return ManagementTest.getInstance();
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+    public async clickLoginButton(){
+        await this.loginButton.singleLeftClick();
+    }
+    public async waitForLoadingScreen(): Promise<void>{
+        await this.loadingScreen.isDisplayed();
+    }
 }
 
