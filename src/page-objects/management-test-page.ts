@@ -1,6 +1,7 @@
 import { browser, by, element, ElementFinder } from 'protractor';
 import { timeout } from 'q';
 import ElementWrapper from '../utilities/protractor-wrappers/elements';
+import { UserDataObject } from '@data-objects/user';
 
 export default class ManagementTest{
     private static _managementTest: ManagementTest;
@@ -13,10 +14,13 @@ export default class ManagementTest{
         return this._managementTest;
     }
 
-    public async getHiUserText(name:string): Promise<string>{
-        return await this.userDroplist(name).getText();
+    public async getHiUserText(user: UserDataObject): Promise<boolean>{
+        let text = await this.userDroplist(user.username).getText()
+        if(text.indexOf(user.username)!= null){
+            return true;
+        }
     }
-    public async getManagementTestPageTiitle(): Promise<string>{
+    public async getManagementTestPageTitle(): Promise<string>{
         return browser.getTitle();
     }
 

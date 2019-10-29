@@ -35,77 +35,100 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var protractor_1 = require("protractor");
+var elements_1 = __importDefault(require("@utilities/protractor-wrappers/elements"));
+var management_test_page_1 = __importDefault(require("./management-test-page"));
 var LoginPage = /** @class */ (function () {
     function LoginPage() {
-        var _this = this;
-        this.nameInput = protractor_1.element(protractor_1.by.xpath("//input[@id='Username']"));
-        this.passwordInput = protractor_1.element(protractor_1.by.xpath("//input[@id='Password']"));
-        this.loginTitle = protractor_1.element(protractor_1.by.xpath("//span[@class='align-middle']"));
-        this.loginButton = protractor_1.element(protractor_1.by.xpath("//button[@id='logIn']"));
-        this.registerButton = protractor_1.element(protractor_1.by.xpath("//button[contains(text(),'Don't have an account? Click here.')]"));
-        this.setName = function (name) { return __awaiter(_this, void 0, void 0, function () {
+        this.usernameInput = new elements_1.default(protractor_1.by.xpath("//input[@id='Username']"));
+        this.passwordInput = new elements_1.default(protractor_1.by.xpath("//input[@id='Password']"));
+        this.loginTitle = new elements_1.default(protractor_1.by.xpath("//span[@class='align-middle']"));
+        this.loginButton = new elements_1.default(protractor_1.by.xpath("//button[@id='logIn']"));
+        this.registerButton = new elements_1.default(protractor_1.by.xpath("//button[contains(text(),'Don't have an account? Click here.')]"));
+        this.loadingScreen = new elements_1.default(protractor_1.by.xpath("//*[@id=\"loading-screen-container\"]"));
+    }
+    LoginPage.getInstance = function () {
+        this._loginPage = new LoginPage();
+        return this._loginPage;
+    };
+    LoginPage.prototype.inputLoginForm = function (user) {
+        return __awaiter(this, void 0, void 0, function () {
+            var error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.nameInput.sendKeys(name)];
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.usernameInput.input(user.username, 5)];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        this.setPassword = function (password) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.passwordInput.sendKeys(password, 10)];
-                    case 1:
+                        return [4 /*yield*/, this.passwordInput.input(user.password, 5)];
+                    case 2:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 3:
+                        error_1 = _a.sent();
+                        throw new Error(error_1.message);
+                    case 4: return [2 /*return*/];
                 }
             });
-        }); };
-        this.getLoginTittle = function () { return __awaiter(_this, void 0, void 0, function () {
+        });
+    };
+    LoginPage.prototype.getLoginTittle = function () {
+        return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.loginTitle.getText()];
             });
-        }); };
-        this.submitLogin = function () { return __awaiter(_this, void 0, void 0, function () {
+        });
+    };
+    LoginPage.prototype.submitLoginForm = function (user) {
+        return __awaiter(this, void 0, void 0, function () {
+            var error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.loginButton.click()];
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.inputLoginForm(user)];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        this.clearUsername = function () { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.nameInput.clear()];
-                    case 1:
+                        return [4 /*yield*/, this.loginButton.singleLeftClick()];
+                    case 2:
                         _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); };
-        this.clearPassword = function () { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.passwordInput.clear()];
-                    case 1:
+                        return [4 /*yield*/, this.loadingScreen.waitForVisible()];
+                    case 3:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [4 /*yield*/, this.loadingScreen.waitForInvisible()];
+                    case 4:
+                        _a.sent();
+                        return [2 /*return*/, management_test_page_1.default.getInstance()];
+                    case 5:
+                        error_2 = _a.sent();
+                        throw new Error(error_2.message);
+                    case 6: return [2 /*return*/];
                 }
             });
-        }); };
-    }
-    LoginPage.prototype.getBrowser = function () {
+        });
+    };
+    LoginPage.prototype.clickLoginButton = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, protractor_1.browser.get('http://192.168.171.191:4200/#/login')];
+                    case 0: return [4 /*yield*/, this.loginButton.singleLeftClick()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    LoginPage.prototype.waitForLoadingScreen = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadingScreen.isDisplayed()];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -115,4 +138,4 @@ var LoginPage = /** @class */ (function () {
     };
     return LoginPage;
 }());
-exports.LoginPage = LoginPage;
+exports.default = LoginPage;

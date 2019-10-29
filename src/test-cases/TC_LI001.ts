@@ -7,6 +7,7 @@ import TestBase from '@utilities/general/test-base';
 import { PageName } from '@test-data/page-url';
 import ManagementTest from '@page-objects/management-test-page';
 import { UserDataObject, User } from '@data-objects/user';
+import { PageTitle } from '@test-data/page-title';
 describe('Dashboard log in page', async () =>{
 	TestBase.scheduleTestBase(PageName.DASH_BOARD_LOGIN);
 	let loginPage:LoginPage;
@@ -22,11 +23,11 @@ describe('Dashboard log in page', async () =>{
 		await LoginPage.getInstance();
 		
 		//submit valid account information 
-		managementPage = await loginPage.submitLoginForm(user.username, user.password);
+		managementPage = await loginPage.submitLoginForm(user);
 		
 		//Welcome message with correct user is display on top menu of manage tests page
-		expect(await managementPage.getManagementTestPageTiitle()).toEqual(`Management Test`);
-		expect(await managementPage.getHiUserText(user.username)).toEqual(`Hi, ${user.username}`);
+		expect(await managementPage.getManagementTestPageTitle()).toEqual(PageTitle.MANAGEMENT_TEST, 'Management page is not displayed.');
+		expect(await managementPage.getHiUserText(user)).toBe(true, "Wrong user")
 
 		
 	  });  
